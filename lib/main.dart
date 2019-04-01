@@ -11,9 +11,44 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Minidoro',
       theme: ThemeData(
-      primarySwatch: Colors.green,
+      primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Minidoro'),
+      // home: MyHomePage(title: 'Minidoro'),
+      home: MyStack(),
+    );
+  }
+}
+
+class MyStack extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Opacity(
+            opacity: 1,
+            child: Container(
+              color: Colors.white,
+            ),
+            ),
+        ),
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.25,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.lightBlue, Colors.lightGreen],
+                  begin: Alignment.topLeft
+                  ),
+              ),
+              child: FlutterLogo()
+              )
+            ),
+        ),
+        MyHomePage(title: 'Minidoro'),
+
+      ],
     );
   }
 }
@@ -47,12 +82,12 @@ class _FormData extends State<MyHomePage> with TickerProviderStateMixin{
 // This method is rerun every time setState is called
   @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
      return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
 
       ),
+      backgroundColor: Colors.transparent,
       body: Center(
         child: Column(
           mainAxisAlignment:MainAxisAlignment.spaceEvenly,
@@ -70,17 +105,12 @@ class _FormData extends State<MyHomePage> with TickerProviderStateMixin{
                 );
               },
             ),
-            AnimatedBuilder(
-              animation: controller,
-              builder: (BuildContext context, Widget child){
-                return Text(
-                  _counter,
-                  style: themeData.textTheme.display4,
-                );
-              },
-            ),
-            RaisedButton(
-                color: Colors.green,
+      
+            ButtonTheme(
+              child: RaisedButton(
+                color: Colors.green,   
+                padding: EdgeInsets.all(0),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100.0)),
                 onPressed: (){
                   if(controller.isAnimating){
                     controller.stop();
@@ -92,34 +122,34 @@ class _FormData extends State<MyHomePage> with TickerProviderStateMixin{
                   }
                   
                 },
-                child: Container(
-                  child: Text(
-                    'START',
-                    style: TextStyle(
-                      fontSize: 25
-                    ),),
-                )
+                child: AnimatedBuilder(   
+                  animation: controller,
+                  builder: (BuildContext context, Widget child){
+                    return Icon (controller.isAnimating
+                      ? Icons.pause_circle_outline
+                      : Icons.play_circle_outline,
+                      size: 80,
+                      color: Colors.white,
+                      );
+                  },
+                 ),
+                ),
               ),
               RaisedButton(
                 color: Colors.red,
+                padding: EdgeInsets.all(0),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100.0)),
                 onPressed: (){
-                  if(controller.isAnimating){
                     controller.reset();
-                  }
-                  else{
-                    controller.reverse(
-                      from: controller.value == 0.0 ? 1.0:controller.value
-                    );
-                  }
-                  
                 },
-                child: Container(
-                  child: Text(
-                    'RESET',
-                    style: TextStyle(
-                      fontSize: 25
-                    ),),
-                )
+                child: AnimatedBuilder(                  
+                  animation: controller,
+                  builder: (BuildContext context, Widget child){
+                    return Icon (
+                      Icons.stop,
+                     size: 80,);
+                  },
+                ),
               )
         
           ],
